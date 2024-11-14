@@ -3,7 +3,7 @@ import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import { Suspense } from 'react';
 
 function House() {
-  const { scene } = useGLTF('/model/house.glb');
+  const { scene } = useGLTF('https://configrator-zjd6.vercel.app/model/house.glb');
   scene.traverse((node) => {
     if (node.isMesh) node.castShadow = true;
   });
@@ -28,7 +28,7 @@ export default function App() {
     >
       <Suspense fallback={null}>
         {/* Ensure the path to Environment HDR is correct */}
-        <Environment files="/envy.hdr" background={false} />
+        <Environment files="https://configrator-zjd6.vercel.app/envy.hdr" background={false} />
         <House />
         <Ground />
         <OrbitControls />
