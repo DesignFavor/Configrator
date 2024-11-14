@@ -1,12 +1,9 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import { Suspense } from 'react';
-import './index.css';
 
 function House() {
-  const { scene } = useGLTF('/model/house.glb'); // Adjusted the path
+  const { scene } = useGLTF('/public/model/house.glb');
   scene.traverse((node) => {
     if (node.isMesh) node.castShadow = true;
   });
@@ -30,7 +27,7 @@ export default function App() {
       camera={{ position: [5, 5, 5], fov: 50 }}
     >
       <Suspense fallback={null}>
-        <Environment files="/envy.hdr" background={false} /> {/* Adjusted the path */}
+        <Environment files="/public/envy.hdr" background={false} />
         <House />
         <Ground />
         <OrbitControls />
@@ -52,10 +49,3 @@ export default function App() {
     </Canvas>
   );
 }
-
-// Render the App component
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
