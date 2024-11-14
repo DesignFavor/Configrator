@@ -1,52 +1,45 @@
-import { Canvas } from '@react-three/fiber';
-import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
-import { Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Environment } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 
 function House() {
-  const { scene } = useGLTF('https://configrator-zjd6.vercel.app/model/house.glb');
+  const { scene } = useGLTF('/model/house.glb');
   scene.traverse((node) => {
     if (node.isMesh) node.castShadow = true;
   });
   return <primitive object={scene} />;
 }
 
-function Ground() {
-  return (
-    <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.3, 0]}>
-      <planeGeometry args={[100, 100]} />
-      <shadowMaterial opacity={0.2} />
-    </mesh>
-  );
-}
-
 export default function App() {
   return (
     <Canvas
       shadows
-      style={{ background: 'white' }} // Set the canvas background to white
-      camera={{ position: [5, 5, 5], fov: 50 }}
+      camera={{ position: [5, 5, 5], fov: 50 }} // Perspective camera with fov and position
     >
-      <Suspense fallback={null}>
-        {/* Ensure the path to Environment HDR is correct */}
-        <Environment files="https://configrator-zjd6.vercel.app/envy.hdr" background={false} />
-        <House />
-        <Ground />
-        <OrbitControls />
-      </Suspense>
-
-      {/* Add directional light for shadows */}
+      {/* Ambient and directional lights */}
+      <ambientLight intensity={0.2} />
       <directionalLight
         position={[5, 10, 5]}
         intensity={1}
         castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-        shadow-camera-far={50}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
+        shadow-mapSize={2048}
+        shadow-bias={-0.0001}
       />
+
+      {/* Environment setup */}
+      <Environment files="/envy.hdr" background={false} />
+
+      {/* Orbit Controls */}
+      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+
+      {/* Ground plane */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.3, 0]} receiveShadow>
+        <planeGeometry args={[10, 10]} />
+        <shadowMaterial transparent opacity={0.5} />
+      </mesh>
+
+      {/* House Model */}
+      <House />
     </Canvas>
   );
 }
