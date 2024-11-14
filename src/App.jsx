@@ -27,6 +27,7 @@ export default function App() {
       camera={{ position: [5, 5, 5], fov: 50 }}
     >
       <Suspense fallback={null}>
+        {/* Ensure the path to Environment HDR is correct */}
         <Environment files="/envy.hdr" background={false} />
         <House />
         <Ground />
